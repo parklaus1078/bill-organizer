@@ -1,0 +1,22 @@
+{
+  "$schema": "../../.project-meta.schema.json",
+  "project_name": "bill-organizer",
+  "project_type": "desktop-app",
+  "stack": {
+    "type": "desktop-app",
+    "platform": "cross-platform",
+    "language": "cpp",
+    "framework": "qt",
+    "version": "6.x"
+  },
+  "project_description": "a desktop application that I can organize, schedule billings like electricity bills, gas bills, telephone bills, OTT subscription bills, and etc., includng the card number, cvc number, bcard compnan, billing date, and etc. and can get monthly/annual sum of the bills. I would like it to include the images or emails of the receipts as they are delivered as well.",
+  "created_at": "2026-03-12T15:15:35Z",
+  "stack_initialized_at": "2026-03-13T00:00:00Z",
+  "coding_rules_status": "auto-generated",
+  "git_workflow": {
+    "enabled": true,
+    "base_branch": "main",
+    "auto_create": true,
+    "auto_checkout": true
+  }
+}

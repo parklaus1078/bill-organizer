@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Card Management - Wireframe</title>
+</head>
+<body>
+
+  <!-- State 1: Card List View (with cards) -->
+  <div id="state-card-list" style="border: 1px solid black; padding: 20px; margin: 10px;">
+    <div style="border-bottom: 2px solid gray; padding-bottom: 10px; margin-bottom: 20px;">
+      <h2 style="display: inline;">Payment Cards</h2>
+      <button onclick="showAddCardForm()" style="float: right;">+ Add Card</button>
+    </div>
+
+    <input type="text" placeholder="Search cards..." style="width: 100%; padding: 8px; margin-bottom: 20px;">
+
+    <!-- Card Item 1 -->
+    <div style="border: 1px solid gray; padding: 15px; margin-bottom: 10px;">
+      <div>
+        <strong>My Visa Card</strong>
+        <span style="float: right;">
+          <button onclick="showEditCardForm('card1')">Edit</button>
+          <button onclick="showDeleteConfirmation('card1')">Delete</button>
+        </span>
+      </div>
+      <div style="color: gray; margin-top: 5px;">Chase</div>
+      <div style="margin-top: 5px;">•••• •••• •••• 1234</div>
+      <div style="margin-top: 5px;">Expires 12/28</div>
+    </div>
+
+    <!-- Card Item 2 (Expiring Soon) -->
+    <div style="border: 1px solid gray; padding: 15px; margin-bottom: 10px;">
+      <div>
+        <strong>Work Card</strong>
+        <span style="float: right;">
+          <button onclick="showEditCardForm('card2')">Edit</button>
+          <button onclick="showDeleteConfirmation('card2')">Delete</button>
+        </span>
+      </div>
+      <div style="color: gray; margin-top: 5px;">Bank of America</div>
+      <div style="margin-top: 5px;">•••• •••• •••• 5678</div>
+      <div style="margin-top: 5px;">
+        Expires 04/26
+        <span style="background-color: yellow; padding: 2px 5px; margin-left: 10px;">Expiring Soon</span>
+      </div>
+    </div>
+
+    <!-- Card Item 3 (Expired) -->
+    <div style="border: 1px solid gray; padding: 15px; margin-bottom: 10px; background-color: #ffe6e6;">
+      <div>
+        <strong>Old Mastercard</strong>
+        <span style="float: right;">
+          <button onclick="showEditCardForm('card3')">Edit</button>
+          <button onclick="showDeleteConfirmation('card3')">Delete</button>
+        </span>
+      </div>
+      <div style="color: gray; margin-top: 5px;">Wells Fargo</div>
+      <div style="margin-top: 5px;">•••• •••• •••• 9012</div>
+      <div style="margin-top: 5px;">
+        Expires 01/25
+        <span style="background-color: red; color: white; padding: 2px 5px; margin-left: 10px;">Expired</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- State 2: Card List View (empty state) -->
+  <div id="state-card-list-empty" style="display:none; border: 1px solid black; padding: 20px; margin: 10px;">
+    <div style="border-bottom: 2px solid gray; padding-bottom: 10px; margin-bottom: 20px;">
+      <h2 style="display: inline;">Payment Cards</h2>
+      <button onclick="showAddCardForm()" style="float: right;">+ Add Card</button>
+    </div>
+
+    <div style="text-align: center; padding: 60px 20px;">
+      <div style="font-size: 60px;">💳</div>
+      <h3>No payment cards saved</h3>
+      <p style="color: gray;">Add a card to link it to your subscriptions</p>
+      <button onclick="showAddCardForm()" style="margin-top: 20px; padding: 10px 20px;">Add Your First Card</button>
+    </div>
+  </div>
+
+  <!-- State 3: Add Card Form -->
+  <div id="state-add-card-form" style="display:none; border: 1px solid black; padding: 20px; margin: 10px; max-width: 600px;">
+    <h2>Add Payment Card</h2>
+
+    <form id="add-card-form" onsubmit="handleAddCard(event)">
+      <!-- Card Nickname -->
+      <div style="margin-bottom: 15px;">
+        <label for="card-nickname">Card Nickname *</label><br>
+        <input type="text" id="card-nickname" placeholder="e.g., My Visa, Work Card"
+               style="width: 100%; padding: 8px; margin-top: 5px;" required maxlength="50">
+        <div id="error-nickname" style="color: red; font-size: 12px; margin-top: 3px; display: none;"></div>
+      </div>
+
+      <!-- Issuer/Bank -->
+      <div style="margin-bottom: 15px;">
+        <label for="card-issuer">Issuer/Bank *</label><br>
+        <input type="text" id="card-issuer" placeholder="e.g., Chase, Bank of America"
+               style="width: 100%; padding: 8px; margin-top: 5px;" required maxlength="50">
+        <div id="error-issuer" style="color: red; font-size: 12px; margin-top: 3px; display: none;"></div>
+      </div>
+
+      <!-- Last 4 Digits -->
+      <div style="margin-bottom: 15px;">
+        <label for="card-last4">Last 4 Digits *</label><br>
+        <input type="text" id="card-last4" placeholder="1234"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               required pattern="[0-9]{4}" maxlength="4"
+               oninput="validateLast4(this)">
+        <div id="error-last4" style="color: red; font-size: 12px; margin-top: 3px; display: none;"></div>
+      </div>
+
+      <!-- Expiry Date -->
+      <div style="margin-bottom: 15px;">
+        <label for="card-expiry">Expiry Date *</label><br>
+        <input type="text" id="card-expiry" placeholder="MM/YY"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               required pattern="(0[1-9]|1[0-2])\/[0-9]{2}"
+               oninput="validateExpiry(this)">
+        <div id="error-expiry" style="color: red; font-size: 12px; margin-top: 3px; display: none;"></div>
+      </div>
+
+      <!-- CVC (Optional) -->
+      <div style="margin-bottom: 15px;">
+        <label for="card-cvc">
+          CVC (Optional, encrypted)
+          <span title="CVC will be encrypted and stored securely" style="cursor: help;">ⓘ</span>
+        </label><br>
+        <input type="password" id="card-cvc" placeholder="•••"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               pattern="[0-9]{3,4}" maxlength="4">
+        <div style="font-size: 11px; color: gray; margin-top: 3px;">CVC will be encrypted and stored securely</div>
+        <div id="error-cvc" style="color: red; font-size: 12px; margin-top: 3px; display: none;"></div>
+      </div>
+
+      <!-- Actions -->
+      <div style="margin-top: 30px;">
+        <button type="submit" id="save-button" style="padding: 10px 20px; margin-right: 10px;">Save</button>
+        <button type="button" onclick="cancelAddCard()" style="padding: 10px 20px;">Cancel</button>
+      </div>
+    </form>
+
+    <!-- Loading State (shown during save) -->
+    <div id="loading-state" style="display:none; margin-top: 20px; text-align: center;">
+      <div>⏳ Saving card...</div>
+    </div>
+  </div>
+
+  <!-- State 4: Edit Card Form -->
+  <div id="state-edit-card-form" style="display:none; border: 1px solid black; padding: 20px; margin: 10px; max-width: 600px;">
+    <h2>Edit Payment Card</h2>
+
+    <form id="edit-card-form" onsubmit="handleEditCard(event)">
+      <!-- Card Nickname -->
+      <div style="margin-bottom: 15px;">
+        <label for="edit-card-nickname">Card Nickname *</label><br>
+        <input type="text" id="edit-card-nickname"
+               style="width: 100%; padding: 8px; margin-top: 5px;" required maxlength="50">
+      </div>
+
+      <!-- Issuer/Bank -->
+      <div style="margin-bottom: 15px;">
+        <label for="edit-card-issuer">Issuer/Bank *</label><br>
+        <input type="text" id="edit-card-issuer"
+               style="width: 100%; padding: 8px; margin-top: 5px;" required maxlength="50">
+      </div>
+
+      <!-- Last 4 Digits -->
+      <div style="margin-bottom: 15px;">
+        <label for="edit-card-last4">Last 4 Digits *</label><br>
+        <input type="text" id="edit-card-last4"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               required pattern="[0-9]{4}" maxlength="4">
+      </div>
+
+      <!-- Expiry Date -->
+      <div style="margin-bottom: 15px;">
+        <label for="edit-card-expiry">Expiry Date *</label><br>
+        <input type="text" id="edit-card-expiry" placeholder="MM/YY"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               required pattern="(0[1-9]|1[0-2])\/[0-9]{2}">
+      </div>
+
+      <!-- CVC (Optional, masked if exists) -->
+      <div style="margin-bottom: 15px;">
+        <label for="edit-card-cvc">
+          CVC (Optional, encrypted)
+          <span title="CVC will be encrypted and stored securely" style="cursor: help;">ⓘ</span>
+        </label><br>
+        <input type="password" id="edit-card-cvc" placeholder="•••"
+               style="width: 100%; padding: 8px; margin-top: 5px;"
+               pattern="[0-9]{3,4}" maxlength="4">
+        <div style="font-size: 11px; color: gray; margin-top: 3px;">Leave as ••• to keep current CVC, or enter new value to update</div>
+      </div>
+
+      <!-- Actions -->
+      <div style="margin-top: 30px;">
+        <button type="submit" style="padding: 10px 20px; margin-right: 10px;">Save</button>
+        <button type="button" onclick="cancelEditCard()" style="padding: 10px 20px; margin-right: 10px;">Cancel</button>
+        <button type="button" onclick="showDeleteConfirmation('current-card')"
+                style="padding: 10px 20px; background-color: red; color: white;">Delete Card</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- State 5: Delete Confirmation Dialog -->
+  <div id="state-delete-confirmation" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+       background-color: rgba(0,0,0,0.5);">
+    <div style="background-color: white; max-width: 400px; margin: 100px auto; padding: 20px; border-radius: 8px;">
+      <h3>Delete Card?</h3>
+
+      <div style="margin: 20px 0; padding: 10px; background-color: #f5f5f5;">
+        <div><strong id="delete-card-nickname">My Visa Card</strong></div>
+        <div style="margin-top: 5px;">•••• <span id="delete-card-last4">1234</span></div>
+      </div>
+
+      <div style="margin: 20px 0; padding: 10px; background-color: #fff3cd; border-left: 3px solid orange;">
+        ⚠️ This action cannot be undone.
+      </div>
+
+      <!-- Conditional warning if card is linked to subscriptions -->
+      <div id="subscription-warning" style="display:none; margin: 20px 0; padding: 10px; background-color: #ffe6e6; border-left: 3px solid red;">
+        ⚠️ This card is used by <span id="subscription-count">2</span> subscription(s).<br>
+        Deleting it will not affect existing subscriptions, but you cannot reuse this card.
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button onclick="cancelDelete()" style="padding: 10px 20px; margin-right: 10px;">Cancel</button>
+        <button onclick="confirmDelete()" style="padding: 10px 20px; background-color: red; color: white;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- State 6: Card Selection Mode (for subscription forms) -->
+  <div id="state-card-selection" style="display:none; border: 1px solid black; padding: 20px; margin: 10px; max-width: 500px;">
+    <h3>Select Payment Card</h3>
+
+    <!-- Card selection item 1 -->
+    <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; cursor: pointer;"
+         onclick="selectCard('card1')">
+      <input type="radio" name="card-selection" id="select-card1" value="card1">
+      <label for="select-card1" style="cursor: pointer;">
+        <strong>My Visa Card</strong><br>
+        <span style="color: gray;">Chase</span><br>
+        •••• •••• •••• 1234<br>
+        <span style="font-size: 12px;">Expires 12/28</span>
+      </label>
+    </div>
+
+    <!-- Card selection item 2 (Expiring Soon) -->
+    <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; cursor: pointer;"
+         onclick="selectCard('card2')">
+      <input type="radio" name="card-selection" id="select-card2" value="card2">
+      <label for="select-card2" style="cursor: pointer;">
+        <strong>Work Card</strong><br>
+        <span style="color: gray;">Bank of America</span><br>
+        •••• •••• •••• 5678<br>
+        <span style="font-size: 12px;">Expires 04/26</span>
+        <span style="background-color: yellow; padding: 2px 5px; margin-left: 10px; font-size: 11px;">Expiring Soon</span>
+      </label>
+    </div>
+
+    <!-- Card selection item 3 (Expired, disabled) -->
+    <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; background-color: #f0f0f0; opacity: 0.6;"
+         title="This card is expired">
+      <input type="radio" name="card-selection" id="select-card3" value="card3" disabled>
+      <label for="select-card3" style="cursor: not-allowed;">
+        <strong>Old Mastercard</strong><br>
+        <span style="color: gray;">Wells Fargo</span><br>
+        •••• •••• •••• 9012<br>
+        <span style="font-size: 12px;">Expires 01/25</span>
+        <span style="background-color: red; color: white; padding: 2px 5px; margin-left: 10px; font-size: 11px;">Expired</span>
+      </label>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button onclick="confirmCardSelection()" id="select-button" disabled style="padding: 10px 20px; margin-right: 10px;">Select</button>
+      <button onclick="cancelCardSelection()" style="padding: 10px 20px; margin-right: 10px;">Cancel</button>
+      <a href="#" onclick="showAddCardFromSelection()" style="margin-left: 10px;">+ Add New Card</a>
+    </div>
+  </div>
+
+  <!-- State 7: Success Message / Toast -->
+  <div id="state-success-message" style="display:none; position: fixed; top: 20px; right: 20px;
+       background-color: green; color: white; padding: 15px 20px; border-radius: 5px; z-index: 1000;">
+    <span id="success-message-text">Card saved successfully!</span>
+  </div>
+
+  <!-- State 8: Duplicate Warning Dialog -->
+  <div id="state-duplicate-warning" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+       background-color: rgba(0,0,0,0.5);">
+    <div style="background-color: white; max-width: 400px; margin: 100px auto; padding: 20px; border-radius: 8px;">
+      <h3>⚠️ Duplicate Card Detected</h3>
+
+      <div style="margin: 20px 0;">
+        A card with these details already exists:
+        <div style="margin-top: 10px; padding: 10px; background-color: #f5f5f5;">
+          <strong>My Visa Card</strong><br>
+          •••• •••• •••• 1234<br>
+          Expires 12/28
+        </div>
+      </div>
+
+      <p>Do you want to add it anyway?</p>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button onclick="cancelDuplicate()" style="padding: 10px 20px; margin-right: 10px;">Cancel</button>
+        <button onclick="confirmDuplicate()" style="padding: 10px 20px;">Add Anyway</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentEditCardId = null;
+    let currentDeleteCardId = null;
+    let selectedCardId = null;
+
+    // Navigation functions
+    function showAddCardForm() {
+      hideAllStates();
+      document.getElementById('state-add-card-form').style.display = 'block';
+    }
+
+    function showEditCardForm(cardId) {
+      hideAllStates();
+      currentEditCardId = cardId;
+
+      // Simulate loading card data
+      if (cardId === 'card1') {
+        document.getElementById('edit-card-nickname').value = 'My Visa Card';
+        document.getElementById('edit-card-issuer').value = 'Chase';
+        document.getElementById('edit-card-last4').value = '1234';
+        document.getElementById('edit-card-expiry').value = '12/28';
+        document.getElementById('edit-card-cvc').value = '•••'; // Masked existing CVC
+      }
+
+      document.getElementById('state-edit-card-form').style.display = 'block';
+    }
+
+    function showDeleteConfirmation(cardId) {
+      currentDeleteCardId = cardId;
+
+      // Simulate loading card data for confirmation
+      if (cardId === 'card1') {
+        document.getElementById('delete-card-nickname').textContent = 'My Visa Card';
+        document.getElementById('delete-card-last4').textContent = '1234';
+        // Check if card has subscriptions (simulated)
+        document.getElementById('subscription-warning').style.display = 'none';
+      } else if (cardId === 'card2') {
+        document.getElementById('delete-card-nickname').textContent = 'Work Card';
+        document.getElementById('delete-card-last4').textContent = '5678';
+        // This card has subscriptions
+        document.getElementById('subscription-count').textContent = '2';
+        document.getElementById('subscription-warning').style.display = 'block';
+      }
+
+      document.getElementById('state-delete-confirmation').style.display = 'block';
+    }
+
+    function showCardSelection() {
+      hideAllStates();
+      document.getElementById('state-card-selection').style.display = 'block';
+    }
+
+    function cancelAddCard() {
+      hideAllStates();
+      document.getElementById('state-card-list').style.display = 'block';
+    }
+
+    function cancelEditCard() {
+      hideAllStates();
+      document.getElementById('state-card-list').style.display = 'block';
+    }
+
+    function cancelDelete() {
+      document.getElementById('state-delete-confirmation').style.display = 'none';
+    }
+
+    function cancelCardSelection() {
+      hideAllStates();
+      // In real app, this would close the selection dialog
+      alert('Card selection cancelled');
+    }
+
+    function hideAllStates() {
+      document.getElementById('state-card-list').style.display = 'none';
+      document.getElementById('state-card-list-empty').style.display = 'none';
+      document.getElementById('state-add-card-form').style.display = 'none';
+      document.getElementById('state-edit-card-form').style.display = 'none';
+      document.getElementById('state-card-selection').style.display = 'none';
+    }
+
+    // Form handling
+    function handleAddCard(event) {
+      event.preventDefault();
+
+      const nickname = document.getElementById('card-nickname').value;
+      const issuer = document.getElementById('card-issuer').value;
+      const last4 = document.getElementById('card-last4').value;
+      const expiry = document.getElementById('card-expiry').value;
+      const cvc = document.getElementById('card-cvc').value;
+
+      // Validation
+      if (!nickname || !issuer || !last4 || !expiry) {
+        alert('Please fill all required fields');
+        return;
+      }
+
+      // Check for duplicate (simulated)
+      if (last4 === '1234' && expiry === '12/28') {
+        document.getElementById('state-duplicate-warning').style.display = 'block';
+        return;
+      }
+
+      // Show loading state
+      document.getElementById('add-card-form').style.display = 'none';
+      document.getElementById('loading-state').style.display = 'block';
+
+      // Simulate save (in real app: encrypt CVC, save to database)
+      setTimeout(() => {
+        showSuccessMessage('Card saved successfully!');
+        hideAllStates();
+        document.getElementById('state-card-list').style.display = 'block';
+
+        // Reset form
+        document.getElementById('add-card-form').reset();
+        document.getElementById('add-card-form').style.display = 'block';
+        document.getElementById('loading-state').style.display = 'none';
+      }, 1000);
+    }
+
+    function handleEditCard(event) {
+      event.preventDefault();
+
+      // Simulate update (in real app: encrypt CVC if changed, update database)
+      showSuccessMessage('Card updated successfully!');
+      hideAllStates();
+      document.getElementById('state-card-list').style.display = 'block';
+    }
+
+    function confirmDelete() {
+      // Simulate deletion
+      showSuccessMessage('Card deleted successfully!');
+      document.getElementById('state-delete-confirmation').style.display = 'none';
+      hideAllStates();
+      document.getElementById('state-card-list').style.display = 'block';
+    }
+
+    function confirmDuplicate() {
+      document.getElementById('state-duplicate-warning').style.display = 'none';
+      // Proceed with saving
+      handleAddCard(new Event('submit'));
+    }
+
+    function cancelDuplicate() {
+      document.getElementById('state-duplicate-warning').style.display = 'none';
+    }
+
+    function selectCard(cardId) {
+      selectedCardId = cardId;
+      document.getElementById('select-button').disabled = false;
+
+      // Update radio button
+      document.getElementById('select-' + cardId).checked = true;
+    }
+
+    function confirmCardSelection() {
+      if (!selectedCardId) {
+        alert('Please select a card');
+        return;
+      }
+
+      // In real app, return card ID to subscription form
+      alert('Card selected: ' + selectedCardId);
+      hideAllStates();
+    }
+
+    function showAddCardFromSelection() {
+      // Show add card form in modal/overlay mode
+      hideAllStates();
+      document.getElementById('state-add-card-form').style.display = 'block';
+    }
+
+    function showSuccessMessage(message) {
+      document.getElementById('success-message-text').textContent = message;
+      document.getElementById('state-success-message').style.display = 'block';
+
+      setTimeout(() => {
+        document.getElementById('state-success-message').style.display = 'none';
+      }, 3000);
+    }
+
+    // Validation functions
+    function validateLast4(input) {
+      const value = input.value;
+      const errorDiv = document.getElementById('error-last4');
+
+      if (value && !/^[0-9]{4}$/.test(value)) {
+        errorDiv.textContent = 'Must be exactly 4 digits';
+        errorDiv.style.display = 'block';
+        input.style.borderColor = 'red';
+      } else {
+        errorDiv.style.display = 'none';
+        input.style.borderColor = '';
+      }
+    }
+
+    function validateExpiry(input) {
+      const value = input.value;
+      const errorDiv = document.getElementById('error-expiry');
+
+      if (value) {
+        // Check format MM/YY
+        if (!/^(0[1-9]|1[0-2])\/[0-9]{2}$/.test(value)) {
+          errorDiv.textContent = 'Please enter a valid expiry date (MM/YY)';
+          errorDiv.style.display = 'block';
+          input.style.borderColor = 'red';
+          return;
+        }
+
+        // Check if future date
+        const [month, year] = value.split('/');
+        const expiryDate = new Date(2000 + parseInt(year), parseInt(month) - 1);
+        const today = new Date();
+
+        if (expiryDate < today) {
+          errorDiv.textContent = 'Expiry date must be in the future';
+          errorDiv.style.display = 'block';
+          input.style.borderColor = 'red';
+        } else {
+          errorDiv.style.display = 'none';
+          input.style.borderColor = '';
+        }
+      }
+    }
+
+    // Auto-format expiry date input
+    document.getElementById('card-expiry').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // Demonstrate different initial states (toggle these comments to see different views)
+    // Default: Card list with cards
+    document.getElementById('state-card-list').style.display = 'block';
+
+    // To see empty state:
+    // hideAllStates();
+    // document.getElementById('state-card-list-empty').style.display = 'block';
+
+    // To see add form:
+    // hideAllStates();
+    // document.getElementById('state-add-card-form').style.display = 'block';
+
+    // To see card selection:
+    // hideAllStates();
+    // document.getElementById('state-card-selection').style.display = 'block';
+  </script>
+
+</body>
+</html>
