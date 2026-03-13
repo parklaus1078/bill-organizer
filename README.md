@@ -1,6 +1,6 @@
 # bill-organizer
 
-a desktop application that I can organize, schedule billings like electricity bills, gas bills, telephone bills, OTT subscription bills, and etc., includng the card number, cvc number, bcard compnan, billing date, and etc. and can get monthly/annual sum of the bills. I would like it to include the images or emails of the receipts as they are delivered as well.
+A desktop application to organize the scheduled recurring bills (electricity, gas, phone, OTT subscriptions, etc.), securely manage payment cards linked to those subscriptions (including optional encrypted CVC storage), track monthly and annual spending totals, and store receipt images or email copies as they are delivered.
 
 ---
 
