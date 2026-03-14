@@ -57,6 +57,12 @@ _deps
 *.swo
 *~
 
+# Language servers and code analysis caches
+.cache/
+.clangd/
+.ccls-cache/
+compile_commands.json
+
 # OS
 .DS_Store
 Thumbs.db
@@ -66,3 +72,101 @@ Thumbs.db
 
 # Application specific
 *.log
+
+# ====================================
+# SECURITY: Credentials & Sensitive Data
+# ====================================
+
+# Database files (contains encrypted payment card data)
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+*.db-journal
+
+# Encryption keys and certificates
+*.key
+*.pem
+*.p12
+*.pfx
+*.keystore
+encryption_key*
+*.aes
+
+# Configuration files with secrets
+config.json
+secrets.json
+credentials.json
+.env
+.env.*
+!.env.example
+
+# Qt Settings (may contain encryption keys)
+*.ini
+*.conf
+*.plist
+!*.conf.example
+!*.ini.example
+
+# macOS preferences
+~/Library/Preferences/com.BillOrganizer.*
+.config/BillOrganizer/
+
+# Backup files (may contain sensitive data)
+*.bak
+*.backup
+*.old
+*.orig
+*~.nib
+
+# Test data with real information
+test_data/
+*_real_data*
+production_backup*
+
+# macOS Keychain exports
+*.keychain
+*.keychain-db
+
+# API keys and tokens
+*_token*
+*_secret*
+*_password*
+api_key*
+auth_token*
+
+# User data directories
+user_data/
+receipts/
+bills/
+documents/
+
+# Memory dumps (may contain unencrypted data)
+*.dmp
+*.dump
+core
+core.*
+
+# Temporary files that might contain sensitive data
+tmp/
+temp/
+*.tmp
+*.swp
+.*.swp
+
+# Coverage reports (may expose internal logic)
+coverage/
+coverage.info
+coverage_report/
+*.gcda
+*.gcno
+*.gcov
+
+# Profiling data
+*.prof
+*.perf
+
+# ====================================
+# END SECURITY SECTION
+# ====================================
