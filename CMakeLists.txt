@@ -15,13 +15,34 @@ find_package(Qt6 REQUIRED COMPONENTS
     Core
     Widgets
     Gui
+    Sql
 )
 
 # Application sources
 set(APP_SOURCES
     src/main.cpp
+
+    # Views
     src/views/main_window.h
     src/views/main_window.cpp
+    src/views/card_list_view.h
+    src/views/card_list_view.cpp
+    src/views/card_form_dialog.h
+    src/views/card_form_dialog.cpp
+
+    # Models
+    src/models/payment_card.h
+    src/models/payment_card.cpp
+    src/models/payment_card_manager.h
+    src/models/payment_card_manager.cpp
+    src/models/payment_card_list_model.h
+    src/models/payment_card_list_model.cpp
+
+    # Utilities
+    src/utils/card_encryption.h
+    src/utils/card_encryption.cpp
+    src/utils/card_database.h
+    src/utils/card_database.cpp
 )
 
 # Create executable
@@ -32,6 +53,7 @@ target_link_libraries(${PROJECT_NAME}
     Qt6::Core
     Qt6::Widgets
     Qt6::Gui
+    Qt6::Sql
 )
 
 # Include directories

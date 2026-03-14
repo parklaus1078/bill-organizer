@@ -29,6 +29,7 @@ A dedicated card wallet to store and manage payment method details that can be l
 - Payment gateway integration
 - Card validation with actual banks
 - Automatic card expiry notifications (handled in PLAN-005)
+- Search/filter feature
 
 ## Dependencies
 None
